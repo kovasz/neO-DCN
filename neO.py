@@ -183,10 +183,11 @@ dcnModel.ReadInputFile(jsonData)
 
 startTime = time()
 
-result = Optimize(dcnModel, getModel=bool_get_scheduling)
+result = Optimize(dcnModel, getModel=True)
 	
 if result.isSAT:
 	print("SAT")
+	print("OPTIMUM: {:d}".format(dcnModel.GetObjectiveValue(result.model)))
 	logging.info("elapsed time = {:f}".format(time() - startTime))
 	if bool_get_scheduling:
 		dcnModel.DisplayModel(result.model)

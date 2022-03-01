@@ -136,9 +136,10 @@ class DcnModel1(DcnModel):
 			outputVars.append([linkVars[(l.source, l.destination)]] + [flowVars[(l.source, l.destination)]])
 		return outputVars
 
-	def DisplayModel(self, model):
-		print("Objective value: {:d}".format(sum(model[i][0] for i in range(len(self.links)))))
+	def GetObjectiveValue(self, model):
+		return sum(model[i][0] for i in range(len(self.links)))
 
+	def DisplayModel(self, model):
 		for fIndex, f in enumerate(self.flows):
 			print("Flow ({:d},{:d}):".format(f.source, f.destination))
 			for lIndex, l in enumerate(self.links):

@@ -25,6 +25,15 @@ class DcnModel(object):
 
 		raise NotImplementedError("Please Implement this method")
 
+	def GetObjectiveValue(self, model):
+		"""Returns the objective value
+
+		Parameters:
+
+		model -- optimal model
+		"""
+
+		raise NotImplementedError("Please Implement this method")
 	def DisplayModel(self, model):
 		"""Display the model
 
