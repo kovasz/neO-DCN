@@ -214,14 +214,19 @@ class Model1(Model):
 
 		flows = []
 		
-		i = 2
-		while sheet["B"][i].value:
+		print("Generating rows", end = " ")
+
+		i = 1
+		# i = 0
+		while i < sheet.max_row and sheet["B"][i].value:
+			print(i + 1, end = " ")
 			flows.append({
 				"source": sheet["B"][i].value,
 				"destination": sheet["C"][i].value,
 				"packet rate": sheet["D"][i].value
 			})
 			i += 1
+		print()
 		
 		return flows
 
@@ -266,6 +271,7 @@ if not os.path.exists(outDir):
 	os.makedirs(outDir)
 
 for file in inputFiles:
-		Model1.generateBenchmark(file, outDir)
+	print("Converting {}".format(file))
+	Model1.generateBenchmark(file, outDir)
 
 print("Files converted!")

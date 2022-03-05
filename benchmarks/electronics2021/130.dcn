@@ -1,0 +1,850 @@
+{
+    "version": 1,
+    "number of switches": 36,
+    "links": [
+        {
+            "source": 1,
+            "destination": 17
+        },
+        {
+            "source": 2,
+            "destination": 17
+        },
+        {
+            "source": 3,
+            "destination": 18
+        },
+        {
+            "source": 4,
+            "destination": 18
+        },
+        {
+            "source": 5,
+            "destination": 19
+        },
+        {
+            "source": 6,
+            "destination": 19
+        },
+        {
+            "source": 7,
+            "destination": 20
+        },
+        {
+            "source": 8,
+            "destination": 20
+        },
+        {
+            "source": 9,
+            "destination": 21
+        },
+        {
+            "source": 10,
+            "destination": 21
+        },
+        {
+            "source": 11,
+            "destination": 22
+        },
+        {
+            "source": 12,
+            "destination": 22
+        },
+        {
+            "source": 13,
+            "destination": 23
+        },
+        {
+            "source": 14,
+            "destination": 23
+        },
+        {
+            "source": 15,
+            "destination": 24
+        },
+        {
+            "source": 16,
+            "destination": 24
+        },
+        {
+            "source": 17,
+            "destination": 25
+        },
+        {
+            "source": 17,
+            "destination": 26
+        },
+        {
+            "source": 18,
+            "destination": 25
+        },
+        {
+            "source": 18,
+            "destination": 26
+        },
+        {
+            "source": 19,
+            "destination": 27
+        },
+        {
+            "source": 19,
+            "destination": 28
+        },
+        {
+            "source": 20,
+            "destination": 27
+        },
+        {
+            "source": 20,
+            "destination": 28
+        },
+        {
+            "source": 21,
+            "destination": 29
+        },
+        {
+            "source": 21,
+            "destination": 30
+        },
+        {
+            "source": 22,
+            "destination": 29
+        },
+        {
+            "source": 22,
+            "destination": 30
+        },
+        {
+            "source": 23,
+            "destination": 31
+        },
+        {
+            "source": 23,
+            "destination": 32
+        },
+        {
+            "source": 24,
+            "destination": 31
+        },
+        {
+            "source": 24,
+            "destination": 32
+        },
+        {
+            "source": 25,
+            "destination": 33
+        },
+        {
+            "source": 25,
+            "destination": 34
+        },
+        {
+            "source": 26,
+            "destination": 35
+        },
+        {
+            "source": 26,
+            "destination": 36
+        },
+        {
+            "source": 27,
+            "destination": 33
+        },
+        {
+            "source": 27,
+            "destination": 34
+        },
+        {
+            "source": 28,
+            "destination": 35
+        },
+        {
+            "source": 28,
+            "destination": 36
+        },
+        {
+            "source": 29,
+            "destination": 33
+        },
+        {
+            "source": 29,
+            "destination": 34
+        },
+        {
+            "source": 30,
+            "destination": 35
+        },
+        {
+            "source": 30,
+            "destination": 36
+        },
+        {
+            "source": 31,
+            "destination": 33
+        },
+        {
+            "source": 31,
+            "destination": 34
+        },
+        {
+            "source": 32,
+            "destination": 35
+        },
+        {
+            "source": 33,
+            "destination": 36
+        }
+    ],
+    "flows": [
+        {
+            "source": 1,
+            "destination": 9,
+            "packet rate": 51.6980613227004
+        },
+        {
+            "source": 1,
+            "destination": 9,
+            "packet rate": 17.599340024749072
+        },
+        {
+            "source": 1,
+            "destination": 9,
+            "packet rate": 57.06036023649113
+        },
+        {
+            "source": 1,
+            "destination": 9,
+            "packet rate": 43.448370686099274
+        },
+        {
+            "source": 1,
+            "destination": 9,
+            "packet rate": 43.585865530042625
+        },
+        {
+            "source": 1,
+            "destination": 9,
+            "packet rate": 113.29575140932215
+        },
+        {
+            "source": 1,
+            "destination": 9,
+            "packet rate": 58.572803519868
+        },
+        {
+            "source": 1,
+            "destination": 9,
+            "packet rate": 114.25821531692561
+        },
+        {
+            "source": 1,
+            "destination": 9,
+            "packet rate": 19.524267839956003
+        },
+        {
+            "source": 1,
+            "destination": 9,
+            "packet rate": 7.837206104771071
+        },
+        {
+            "source": 1,
+            "destination": 9,
+            "packet rate": 2.8873917228103942
+        },
+        {
+            "source": 1,
+            "destination": 9,
+            "packet rate": 78.92204042348412
+        },
+        {
+            "source": 1,
+            "destination": 9,
+            "packet rate": 93.6339887254228
+        },
+        {
+            "source": 1,
+            "destination": 9,
+            "packet rate": 121.27045235803658
+        },
+        {
+            "source": 1,
+            "destination": 9,
+            "packet rate": 96.24639076034649
+        },
+        {
+            "source": 1,
+            "destination": 9,
+            "packet rate": 80.15949401897429
+        },
+        {
+            "source": 2,
+            "destination": 10,
+            "packet rate": 18.59427296392711
+        },
+        {
+            "source": 2,
+            "destination": 10,
+            "packet rate": 19.957852981281764
+        },
+        {
+            "source": 2,
+            "destination": 10,
+            "packet rate": 91.48382298252139
+        },
+        {
+            "source": 2,
+            "destination": 10,
+            "packet rate": 96.0704103136234
+        },
+        {
+            "source": 2,
+            "destination": 10,
+            "packet rate": 110.57394322548656
+        },
+        {
+            "source": 2,
+            "destination": 10,
+            "packet rate": 78.96367918681047
+        },
+        {
+            "source": 2,
+            "destination": 10,
+            "packet rate": 71.52597000123961
+        },
+        {
+            "source": 2,
+            "destination": 10,
+            "packet rate": 77.10425189041776
+        },
+        {
+            "source": 2,
+            "destination": 10,
+            "packet rate": 37.56043138713276
+        },
+        {
+            "source": 2,
+            "destination": 10,
+            "packet rate": 64.95599355398538
+        },
+        {
+            "source": 2,
+            "destination": 10,
+            "packet rate": 25.288211230940867
+        },
+        {
+            "source": 2,
+            "destination": 10,
+            "packet rate": 76.85632825089871
+        },
+        {
+            "source": 2,
+            "destination": 10,
+            "packet rate": 32.84988223627123
+        },
+        {
+            "source": 2,
+            "destination": 10,
+            "packet rate": 66.31957357134003
+        },
+        {
+            "source": 2,
+            "destination": 10,
+            "packet rate": 72.51766455931573
+        },
+        {
+            "source": 2,
+            "destination": 10,
+            "packet rate": 59.37771166480724
+        },
+        {
+            "source": 3,
+            "destination": 11,
+            "packet rate": 106.921185150486
+        },
+        {
+            "source": 3,
+            "destination": 11,
+            "packet rate": 12.999180231877268
+        },
+        {
+            "source": 3,
+            "destination": 11,
+            "packet rate": 94.62466330952101
+        },
+        {
+            "source": 3,
+            "destination": 11,
+            "packet rate": 29.277432954678535
+        },
+        {
+            "source": 3,
+            "destination": 11,
+            "packet rate": 46.14123433657337
+        },
+        {
+            "source": 3,
+            "destination": 11,
+            "packet rate": 80.45438575945661
+        },
+        {
+            "source": 3,
+            "destination": 11,
+            "packet rate": 115.47019557325214
+        },
+        {
+            "source": 3,
+            "destination": 11,
+            "packet rate": 64.17613303665534
+        },
+        {
+            "source": 3,
+            "destination": 11,
+            "packet rate": 47.546551118397936
+        },
+        {
+            "source": 3,
+            "destination": 11,
+            "packet rate": 10.7740953273217
+        },
+        {
+            "source": 3,
+            "destination": 11,
+            "packet rate": 73.89624077760863
+        },
+        {
+            "source": 3,
+            "destination": 11,
+            "packet rate": 18.971776554631692
+        },
+        {
+            "source": 3,
+            "destination": 11,
+            "packet rate": 78.58063005035719
+        },
+        {
+            "source": 3,
+            "destination": 11,
+            "packet rate": 44.7359175547488
+        },
+        {
+            "source": 3,
+            "destination": 11,
+            "packet rate": 81.85970254128118
+        },
+        {
+            "source": 3,
+            "destination": 11,
+            "packet rate": 93.5706757231526
+        },
+        {
+            "source": 4,
+            "destination": 12,
+            "packet rate": 56.88581314878893
+        },
+        {
+            "source": 4,
+            "destination": 12,
+            "packet rate": 98.96193771626298
+        },
+        {
+            "source": 4,
+            "destination": 12,
+            "packet rate": 82.21453287197232
+        },
+        {
+            "source": 4,
+            "destination": 12,
+            "packet rate": 41.522491349480966
+        },
+        {
+            "source": 4,
+            "destination": 12,
+            "packet rate": 131.21107266435985
+        },
+        {
+            "source": 4,
+            "destination": 12,
+            "packet rate": 4.705882352941176
+        },
+        {
+            "source": 4,
+            "destination": 12,
+            "packet rate": 20.207612456747405
+        },
+        {
+            "source": 4,
+            "destination": 12,
+            "packet rate": 90.51903114186851
+        },
+        {
+            "source": 4,
+            "destination": 12,
+            "packet rate": 82.7681660899654
+        },
+        {
+            "source": 4,
+            "destination": 12,
+            "packet rate": 16.05536332179931
+        },
+        {
+            "source": 4,
+            "destination": 12,
+            "packet rate": 119.86159169550173
+        },
+        {
+            "source": 4,
+            "destination": 12,
+            "packet rate": 97.16262975778547
+        },
+        {
+            "source": 4,
+            "destination": 12,
+            "packet rate": 61.5916955017301
+        },
+        {
+            "source": 4,
+            "destination": 12,
+            "packet rate": 4.290657439446367
+        },
+        {
+            "source": 4,
+            "destination": 12,
+            "packet rate": 51.903114186851205
+        },
+        {
+            "source": 4,
+            "destination": 12,
+            "packet rate": 40.13840830449827
+        },
+        {
+            "source": 5,
+            "destination": 13,
+            "packet rate": 110.42078508895791
+        },
+        {
+            "source": 5,
+            "destination": 13,
+            "packet rate": 28.381813047161817
+        },
+        {
+            "source": 5,
+            "destination": 13,
+            "packet rate": 3.6712792996328725
+        },
+        {
+            "source": 5,
+            "destination": 13,
+            "packet rate": 45.326179045467384
+        },
+        {
+            "source": 5,
+            "destination": 13,
+            "packet rate": 96.86529229031348
+        },
+        {
+            "source": 5,
+            "destination": 13,
+            "packet rate": 23.016097147698392
+        },
+        {
+            "source": 5,
+            "destination": 13,
+            "packet rate": 112.96243998870375
+        },
+        {
+            "source": 5,
+            "destination": 13,
+            "packet rate": 84.72182999152781
+        },
+        {
+            "source": 5,
+            "destination": 13,
+            "packet rate": 77.37927139226207
+        },
+        {
+            "source": 5,
+            "destination": 13,
+            "packet rate": 97.430104490257
+        },
+        {
+            "source": 5,
+            "destination": 13,
+            "packet rate": 21.321660547867832
+        },
+        {
+            "source": 5,
+            "destination": 13,
+            "packet rate": 99.12454109008755
+        },
+        {
+            "source": 5,
+            "destination": 13,
+            "packet rate": 84.01581474159842
+        },
+        {
+            "source": 5,
+            "destination": 13,
+            "packet rate": 46.45580344535442
+        },
+        {
+            "source": 5,
+            "destination": 13,
+            "packet rate": 64.95340299350467
+        },
+        {
+            "source": 5,
+            "destination": 13,
+            "packet rate": 3.9536853996046317
+        },
+        {
+            "source": 6,
+            "destination": 14,
+            "packet rate": 19.909599655617736
+        },
+        {
+            "source": 6,
+            "destination": 14,
+            "packet rate": 99.54799827808867
+        },
+        {
+            "source": 6,
+            "destination": 14,
+            "packet rate": 66.7240637107189
+        },
+        {
+            "source": 6,
+            "destination": 14,
+            "packet rate": 51.65733964700818
+        },
+        {
+            "source": 6,
+            "destination": 14,
+            "packet rate": 83.62031855359449
+        },
+        {
+            "source": 6,
+            "destination": 14,
+            "packet rate": 78.66982350408954
+        },
+        {
+            "source": 6,
+            "destination": 14,
+            "packet rate": 89.10891089108911
+        },
+        {
+            "source": 6,
+            "destination": 14,
+            "packet rate": 7.318123116659492
+        },
+        {
+            "source": 6,
+            "destination": 14,
+            "packet rate": 35.94489883770986
+        },
+        {
+            "source": 6,
+            "destination": 14,
+            "packet rate": 95.13560051657339
+        },
+        {
+            "source": 6,
+            "destination": 14,
+            "packet rate": 68.23073611708998
+        },
+        {
+            "source": 6,
+            "destination": 14,
+            "packet rate": 50.15066724063711
+        },
+        {
+            "source": 6,
+            "destination": 14,
+            "packet rate": 91.26130004304778
+        },
+        {
+            "source": 6,
+            "destination": 14,
+            "packet rate": 67.6926388291003
+        },
+        {
+            "source": 6,
+            "destination": 14,
+            "packet rate": 70.16788635385278
+        },
+        {
+            "source": 6,
+            "destination": 14,
+            "packet rate": 24.860094705122684
+        },
+        {
+            "source": 7,
+            "destination": 15,
+            "packet rate": 12.87172658677319
+        },
+        {
+            "source": 7,
+            "destination": 15,
+            "packet rate": 0.5918035212309514
+        },
+        {
+            "source": 7,
+            "destination": 15,
+            "packet rate": 140.99718893327415
+        },
+        {
+            "source": 7,
+            "destination": 15,
+            "packet rate": 47.93608521970705
+        },
+        {
+            "source": 7,
+            "destination": 15,
+            "packet rate": 43.20165704985945
+        },
+        {
+            "source": 7,
+            "destination": 15,
+            "packet rate": 61.3996153277112
+        },
+        {
+            "source": 7,
+            "destination": 15,
+            "packet rate": 61.843467968634414
+        },
+        {
+            "source": 7,
+            "destination": 15,
+            "packet rate": 103.71356709572422
+        },
+        {
+            "source": 7,
+            "destination": 15,
+            "packet rate": 57.84879420032549
+        },
+        {
+            "source": 7,
+            "destination": 15,
+            "packet rate": 96.16807220002958
+        },
+        {
+            "source": 7,
+            "destination": 15,
+            "packet rate": 119.39636040834444
+        },
+        {
+            "source": 7,
+            "destination": 15,
+            "packet rate": 90.39798786802781
+        },
+        {
+            "source": 7,
+            "destination": 15,
+            "packet rate": 41.13034472555112
+        },
+        {
+            "source": 7,
+            "destination": 15,
+            "packet rate": 36.839769196626726
+        },
+        {
+            "source": 7,
+            "destination": 15,
+            "packet rate": 43.64550969078266
+        },
+        {
+            "source": 7,
+            "destination": 15,
+            "packet rate": 42.01805000739754
+        },
+        {
+            "source": 8,
+            "destination": 16,
+            "packet rate": 66.89762274519173
+        },
+        {
+            "source": 8,
+            "destination": 16,
+            "packet rate": 17.79954605184566
+        },
+        {
+            "source": 8,
+            "destination": 16,
+            "packet rate": 62.71652132361726
+        },
+        {
+            "source": 8,
+            "destination": 16,
+            "packet rate": 23.414167960817107
+        },
+        {
+            "source": 8,
+            "destination": 16,
+            "packet rate": 49.93429697766097
+        },
+        {
+            "source": 8,
+            "destination": 16,
+            "packet rate": 8.242742802532554
+        },
+        {
+            "source": 8,
+            "destination": 16,
+            "packet rate": 75.97658583203919
+        },
+        {
+            "source": 8,
+            "destination": 16,
+            "packet rate": 43.722374865607456
+        },
+        {
+            "source": 8,
+            "destination": 16,
+            "packet rate": 4.658941584040139
+        },
+        {
+            "source": 8,
+            "destination": 16,
+            "packet rate": 80.63552741607933
+        },
+        {
+            "source": 8,
+            "destination": 16,
+            "packet rate": 57.460279536495044
+        },
+        {
+            "source": 8,
+            "destination": 16,
+            "packet rate": 30.34285031656911
+        },
+        {
+            "source": 8,
+            "destination": 16,
+            "packet rate": 53.87647831800263
+        },
+        {
+            "source": 8,
+            "destination": 16,
+            "packet rate": 69.28682355752001
+        },
+        {
+            "source": 8,
+            "destination": 16,
+            "packet rate": 92.22315135587147
+        },
+        {
+            "source": 8,
+            "destination": 16,
+            "packet rate": 78.00740652251822
+        },
+        {
+            "source": 8,
+            "destination": 16,
+            "packet rate": 94.85127224943255
+        },
+        {
+            "source": 8,
+            "destination": 16,
+            "packet rate": 89.9534105841596
+        }
+    ]
+}
