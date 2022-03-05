@@ -15,7 +15,7 @@ def ParseResult(resultFileNames, outputFileName = None):
 	outputFile = None
 	if outputFileName is not None:
 		outputFile = open(outputFileName, "w")
-		outputFile.write("file;opt;time\n")
+		outputFile.write("file;res;opt;time\n")
 
 	for i in range(len(resultFileNames)):
 		resultFile = open(resultFileNames[i], "r")
@@ -27,24 +27,31 @@ def ParseResult(resultFileNames, outputFileName = None):
 			if fileNameResult:
 				fileName = fileNameResult[0]
 			else:
-				optimumResult = parse("OPTIMUM: {:d}", line)
-				if optimumResult:
-					optimum = optimumResult[0]
+				if parse("SAT", line):
+					result = "sat"
 					cntSolved += 1
+				elif parse("UNSAT", line):
+					result = "unsat"
+					cntSolved += 1
+					optimum = ""
 				elif parse("TIMEOUT", line):
-					optimum = 0
+					# optimum = 0
 					cntTimeout += 1
 					sumTime += TIMEOUT
 					if outputFile:
-						outputFile.write("{};0;{:f}\n".format(fileName, TIMEOUT))
+						outputFile.write("{};{};-1;{:f}\n".format(fileName, result, TIMEOUT))
+					continue
+
+				optimumResult = parse("OPTIMUM: {:d}", line)
+				if optimumResult:
+					optimum = optimumResult[0]
+					# cntSolved += 1
 				else:
 					runtime = parse("ELAPSED TIME = {:f}", line)
-					if runtime is None or optimum == 0:
-						continue
-					else:
+					if runtime:
 						sumTime += runtime[0]
 						if outputFile:
-							outputFile.write("{};{:d};{:f}\n".format(fileName, optimum, runtime[0]))
+							outputFile.write("{};{};{};{:f}\n".format(fileName, result, optimum, runtime[0]))
 
 		resultFile.close()
 
@@ -63,7 +70,8 @@ def Solve(path, solverOption, outFileName):
 			inputFiles.append(file)
 	else:
 		inputFiles.append(path)
-	
+	inputFiles.sort()
+
 	Path(outFileName).touch()
 	for inputFile in inputFiles:
 		RunCMD("python3.7 ../neO.py {} {} --log INFO --timeout {:d} >> {}".format(inputFile, solverOption, TIMEOUT, outFileName))
@@ -72,6 +80,8 @@ def Solve(path, solverOption, outFileName):
 
 ### MODEL 1
 
-Solve("../benchmarks/electronics2021/", "--cp-solver", "out/cp-sat.out")
+Solve("../benchmarks/electronics2021/", "--or-solver gurobi", "out/gurobi.out")
+ParseResult(["out/gurobi.out"], "out/gurobi.csv")
 
-ParseResult(["out/cp-sat.out"], "out/cp-sat.csv")
+# Solve("../benchmarks/electronics2021/", "--cp-solver", "out/cp-sat.out")
+# ParseResult(["out/cp-sat.out"], "out/cp-sat.csv")

@@ -223,7 +223,7 @@ class Model1(Model):
 			flows.append({
 				"source": sheet["B"][i].value,
 				"destination": sheet["C"][i].value,
-				"packet rate": sheet["D"][i].value
+				"packet rate": int(sheet["D"][i].value)
 			})
 			i += 1
 		print()

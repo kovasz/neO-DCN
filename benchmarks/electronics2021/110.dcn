@@ -197,11 +197,6 @@
     ],
     "flows": [
         {
-            "source": 6,
-            "destination": 16,
-            "packet rate": 23
-        },
-        {
             "source": 7,
             "destination": 13,
             "packet rate": 9
