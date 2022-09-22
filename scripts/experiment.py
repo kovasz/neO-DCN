@@ -1,5 +1,5 @@
 import subprocess
-from parse import parse
+from parse import parse, search
 from pathlib import Path
 import random as rnd
 import os
@@ -15,17 +15,18 @@ def ParseResult(resultFileNames, outputFileName = None):
 	outputFile = None
 	if outputFileName is not None:
 		outputFile = open(outputFileName, "w")
-		outputFile.write("file;res;opt;time\n")
+		outputFile.write("file;res;opt;time;mem\n")
 
 	for i in range(len(resultFileNames)):
 		resultFile = open(resultFileNames[i], "r")
 
-		cntSolved = cntTimeout = sumTime = 0
+		cntSolved = cntTimeout = sumTime = sumMem = 0
 
 		for line in resultFile:
 			fileNameResult = parse("INFO:root:Parsing the file {}", line)
 			if fileNameResult:
 				fileName = fileNameResult[0]
+				isTimeout = False
 			else:
 				if parse("SAT", line):
 					result = "sat"
@@ -35,27 +36,33 @@ def ParseResult(resultFileNames, outputFileName = None):
 					cntSolved += 1
 					optimum = ""
 				elif parse("TIMEOUT", line):
-					# optimum = 0
 					cntTimeout += 1
 					sumTime += TIMEOUT
-					if outputFile:
-						outputFile.write("{};{};-1;{:f}\n".format(fileName, result, TIMEOUT))
-					continue
-
-				optimumResult = parse("OPTIMUM: {:d}", line)
-				if optimumResult:
-					optimum = optimumResult[0]
-					# cntSolved += 1
+					isTimeout = True
 				else:
-					runtime = parse("ELAPSED TIME = {:f}", line)
-					if runtime:
-						sumTime += runtime[0]
-						if outputFile:
-							outputFile.write("{};{};{};{:f}\n".format(fileName, result, optimum, runtime[0]))
+					optimumResult = parse("OPTIMUM: {:d}", line)
+					if optimumResult:
+						optimum = optimumResult[0]
+						# cntSolved += 1
+					else:
+						memResult = search("{:f} MiB", line)
+						if memResult:
+							mem = memResult[0]
+							sumMem += mem
+							if outputFile:
+								if isTimeout:
+									outputFile.write("{};;;{:f};{:f}\n".format(fileName, TIMEOUT, mem))
+								else:
+									outputFile.write("{};{};{};{:f};{:f}\n".format(fileName, result, optimum, runtime, mem))
+						elif not isTimeout:
+							runtimeResult = parse("ELAPSED TIME = {:f}", line)
+							if runtimeResult:
+								runtime = runtimeResult[0]
+								sumTime += runtime
 
 		resultFile.close()
 
-		print("{}: #solved = {}, #avgtime = {}".format(resultFileNames[i], cntSolved, sumTime / (cntSolved + cntTimeout)))
+		print("{}: #solved = {}, #timeout = {}, #avgtime = {}, #avgmem = {}".format(resultFileNames[i], cntSolved, cntTimeout, sumTime / (cntSolved + cntTimeout), sumMem / (cntSolved + cntTimeout)))
 
 	if outputFile:
 		outputFile.close()
@@ -74,14 +81,60 @@ def Solve(path, solverOption, outFileName):
 
 	Path(outFileName).touch()
 	for inputFile in inputFiles:
-		RunCMD("python3.7 ../neO.py {} {} --log INFO --timeout {:d} >> {}".format(inputFile, solverOption, TIMEOUT, outFileName))
+		# RunCMD("python3.7 ../neO.py {} {} --log INFO --timeout {:d} >> {}".format(inputFile, solverOption, TIMEOUT, outFileName))
+		RunCMD("mprof run -C -T 0.5 python3.7 ../neO.py {} {} --log INFO --timeout {:d} >> {}".format(inputFile, solverOption, TIMEOUT, outFileName))
+		RunCMD("mprof peak >> {}".format(outFileName))
+
+def MemProf(path, solverOption, outFileName, outCsvFileName):
+	if not os.path.exists(path):
+		print("Input path {} does not exist".format(path))
+		exit()
+	inputFiles = []
+	if os.path.isdir(path):
+		for file in glob.glob("{}/*.dcn".format(path)):
+			inputFiles.append(file)
+	else:
+		inputFiles.append(path)
+	inputFiles.sort()
+
+	Path(outFileName).touch()
+	for inputFile in inputFiles:
+		RunCMD("echo 'File {}' >> {}".format(inputFile, outFileName))
+		RunCMD("mprof run -C python3.7 ../neO.py {} {} --timeout {:d}".format(inputFile, solverOption, TIMEOUT))
+		RunCMD("mprof peak >> {}".format(outFileName))
+		# RunCMD("mprof peak | sed -r 's/.*\s([0-9]+\.[0-9]+) MiB/\1/' >> {}".format(outFileName))
+
+	outCsvFile = open(outCsvFileName, "w")
+	outCsvFile.write("file;mem\n")
+	resultFile = open(outFileName, "r")
+
+	for line in resultFile:
+		fileNameResult = parse("File {}", line)
+		if fileNameResult:
+			fileName = fileNameResult[0]
+		else:
+			memResult = search("{:f} MiB", line)
+			if memResult:
+				mem = memResult[0]
+				outCsvFile.write("{};{:f}\n".format(fileName, mem))
+
+	resultFile.close()
+	outCsvFile.close()
 
 
 
 ### MODEL 1
 
-Solve("../benchmarks/electronics2021/", "--or-solver gurobi", "out/gurobi.out")
-ParseResult(["out/gurobi.out"], "out/gurobi.csv")
+# Solve("../benchmarks/electronics2021/", "--or-solver gurobi", "out/gurobi.out")
+# ParseResult(["out/gurobi.out"], "out/gurobi.csv")
 
-# Solve("../benchmarks/electronics2021/", "--cp-solver", "out/cp-sat.out")
-# ParseResult(["out/cp-sat.out"], "out/cp-sat.csv")
+# Solve("../benchmarks/electronics2021/", "--or-solver cbc", "out/cbc.out")
+# ParseResult(["out/cbc.out"], "out/cbc.csv")
+
+# Solve("../benchmarks/electronics2021/", "--or-solver scip", "out/scip.out")
+# ParseResult(["out/scip.out"], "out/scip.csv")
+
+Solve("../benchmarks/electronics2021/", "--cp-solver", "out/cp-sat.out")
+ParseResult(["out/cp-sat.out"], "out/cp-sat.csv")
+
+# RunCMD("systemctl poweroff")

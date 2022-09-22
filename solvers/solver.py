@@ -1,14 +1,23 @@
 # -*- coding: utf-8 -*-
+from enum import Enum
 
 from solvers.card_enc_type import Relations, RelationOps
 
 SAT = True
 UNSAT = False
 
+class SolverResultType(Enum):
+	NONE = 0
+	UNSAT = 1
+	SAT = 2
+	TIMEOUT = 3
+
 class SolverResult():
-	def __init__(self, solverType, isSAT, model = None):
+	def __init__(self, solverType = None, isSAT = False, isTIMEOUT = False, model = None):
 		self.solverType = solverType
-		self.isSAT = isSAT
+		self.result = SolverResultType.SAT if isSAT else SolverResultType.UNSAT
+		if isTIMEOUT: self.result = SolverResultType.TIMEOUT
+		# self.isSAT = isSAT
 		self.model = model
 
 class Constraint():

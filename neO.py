@@ -16,7 +16,7 @@ logging.captureWarnings(True)
 from models.model1 import DcnModel1
 
 from solvers.card_enc_type import CardEncType, Relations, RelationOps
-from solvers.solver import SolverResult
+from solvers.solver import SolverResult, SolverResultType
 from solvers.solver_sat import SatSolver, SatSolvers
 from solvers.solver_smt import SmtSolver, SmtSolvers
 # from solvers.solver_mip import MipSolver, MipSolvers
@@ -47,7 +47,7 @@ def runSolver(args):
 	if isSAT == None:
 		return
 
-	result = SolverResult(solverType, isSAT)
+	result = SolverResult(solverType, isSAT = isSAT)
 	if isSAT and getModel:
 		result.model = solver.get_model(outputVars)
 
@@ -76,17 +76,18 @@ def Optimize(dcnModel, getModel=False):
 	to = int(startTime + timeout - time()) if timeout else None
 	pool = ProcessPool(len(solverConfigs), timeout=to)
 
-	result = None
 	try:
 		result = pool.uimap(runSolver, solverConfigs).next(timeout=to)
 	except TimeoutError:
-		print("TIMEOUT")
+		result = SolverResult(isTIMEOUT = True)
+	except:
+		result = SolverResult()
 	else:
 		logging.info("Result provided by: {}".format(result.solverType))
-		if result.isSAT:
-			logging.info("SAT")
-		else:
-			logging.info("UNSAT")
+		# if result.isSAT:
+		# 	logging.info("SAT")
+		# else:
+		# 	logging.info("UNSAT")
 	finally:
 		pool.terminate()
 		pool.clear()
@@ -185,15 +186,21 @@ startTime = time()
 
 result = Optimize(dcnModel, getModel=True)
 	
-if result.isSAT:
+if result.result == SolverResultType.TIMEOUT:
+	print("TIMEOUT")
+elif result.result == SolverResultType.SAT:
+	logging.info("Result provided by: {}".format(result.solverType))
 	print("SAT")
 	print("OPTIMUM: {:d}".format(dcnModel.GetObjectiveValue(result.model)))
 	logging.info("elapsed time = {:f}".format(time() - startTime))
 	if bool_get_scheduling:
 		dcnModel.DisplayModel(result.model)
-else:
+elif result.result == SolverResultType.UNSAT:
+	logging.info("Result provided by: {}".format(result.solverType))
 	print("UNSAT")
 	logging.info("elapsed time = {:f}".format(time() - startTime))
+else:
+	print("ERROR: no solver provided a result and timed out")
 
 print("ELAPSED TIME = {:f}".format(time() - startTime))
 
