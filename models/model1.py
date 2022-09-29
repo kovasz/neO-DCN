@@ -117,6 +117,8 @@ class DcnModel1(DcnModel):
 			lits = []
 			weights = []
 			for fIndex, f in enumerate(self.flows):
+				# lits.append(flowVars[(l.source, l.destination)][fIndex])
+				# weights.append(f.packetRate)
 				lits.extend([flowVars[(l.source, l.destination)][fIndex], flowVars[(l.destination, l.source)][fIndex]])
 				weights.extend([f.packetRate, f.packetRate])
 			solver.addConstraint(Constraint(

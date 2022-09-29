@@ -125,16 +125,31 @@ def MemProf(path, solverOption, outFileName, outCsvFileName):
 
 ### MODEL 1
 
-# Solve("../benchmarks/electronics2021/", "--or-solver gurobi", "out/gurobi.out")
-# ParseResult(["out/gurobi.out"], "out/gurobi.csv")
+# Solve("../benchmarks/cscs2022/2/NCP", "--or-solver gurobi", "out/ncp.gurobi.out")
+# ParseResult(["out/ncp.gurobi.out"], "out/ncp.gurobi.csv")
 
-# Solve("../benchmarks/electronics2021/", "--or-solver cbc", "out/cbc.out")
-# ParseResult(["out/cbc.out"], "out/cbc.csv")
+# Solve("../benchmarks/cscs2022/2/NCP", "--cp-solver", "out/ncp.cpsat.out")
+# ParseResult(["out/ncp.cpsat.out"], "out/ncp.cpsat.csv")
 
-# Solve("../benchmarks/electronics2021/", "--or-solver scip", "out/scip.out")
-# ParseResult(["out/scip.out"], "out/scip.csv")
+# Solve("../benchmarks/cscs2022/2/NCP", "--or-solver cbc", "out/ncp.cbc.out")
+# ParseResult(["out/ncp.cbc.out"], "out/ncp.cbc.csv")
 
-Solve("../benchmarks/electronics2021/", "--cp-solver", "out/cp-sat.out")
-ParseResult(["out/cp-sat.out"], "out/cp-sat.csv")
+# Solve("../benchmarks/cscs2022/2/NCP", "--or-solver scip", "out/ncp.scip.out")
+# ParseResult(["out/ncp.scip.out"], "out/ncp.scip.csv")
+
+# Solve("../benchmarks/cscs2022/2/Random", "--or-solver gurobi", "out/rnd.gurobi.out")
+# ParseResult(["out/rnd.gurobi.out"], "out/rnd.gurobi.csv")
+
+# Solve("../benchmarks/cscs2022/2/Random", "--or-solver cbc", "out/rnd.cbc.out")
+# ParseResult(["out/rnd.cbc.out"], "out/rnd.cbc.csv")
+
+# Solve("../benchmarks/cscs2022/2/Random", "--or-solver scip", "out/rnd.scip.out")
+# ParseResult(["out/rnd.scip.out"], "out/rnd.scip.csv")
+
+# Solve("../benchmarks/cscs2022/2/Random", "--cp-solver", "out/rnd.cpsat.out")
+# ParseResult(["out/rnd.cpsat.out"], "out/rnd.cpsat.csv")
+
+Solve("../benchmarks/cscs2022/3", "--or-solver gurobi", "out/rnd.gurobi.out")
+ParseResult(["out/rnd.gurobi.out"], "out/rnd.gurobi.csv")
 
 # RunCMD("systemctl poweroff")

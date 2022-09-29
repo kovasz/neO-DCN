@@ -5,6 +5,9 @@ from pathlib import PurePosixPath
 from openpyxl import load_workbook
 import json
 
+startingRow = 0
+startingColumn = "B"
+
 class Model(object):
 	@staticmethod
 	def generateBenchmark(inputFile, outputDir, numberOfFlows):
@@ -216,14 +219,13 @@ class Model1(Model):
 		
 		print("Generating rows", end = " ")
 
-		i = 1
-		# i = 0
-		while i < sheet.max_row and sheet["B"][i].value:
+		i = startingRow
+		while i < sheet.max_row and sheet[startingColumn][i].value:
 			print(i + 1, end = " ")
 			flows.append({
-				"source": sheet["B"][i].value,
-				"destination": sheet["C"][i].value,
-				"packet rate": int(sheet["D"][i].value)
+				"source": sheet[startingColumn][i].value,
+				"destination": sheet[chr(ord(startingColumn) + 1)][i].value,
+				"packet rate": int(sheet[chr(ord(startingColumn) + 2)][i].value)
 			})
 			i += 1
 		print()
