@@ -111,14 +111,23 @@ class Solver(object):
 
 		raise NotImplementedError("Please Implement this method")
 
-	def get_model(self, vars):
-		"""Get the satisfying model for certain vars
+	def get_model(self, lit):
+		"""Get the satisfying model for literals
 
 		Parameters:
 
-		vars -- a list of vars
+		lit -- a literal, or a list/tuple/dictionary of literals
 
-		Returns: a list of assignments to vars
+		Returns: assignments to literals in the same structure
 		"""
 
-		raise NotImplementedError("Please Implement this method")
+		if not lit:
+			return None
+		elif isinstance(lit, list):
+			return [self.get_model(l) for l in lit]
+		elif isinstance(lit, tuple):
+			return tuple(self.get_model(l) for l in lit)
+		elif isinstance(lit, dict):
+			return {k : self.get_model(l) for k, l in lit.items() }
+		else:
+			raise NotImplementedError(f"Please, implement this method for type {type(lit)}")

@@ -159,9 +159,7 @@ class CpSat(Solver):
 	def get_model(self, lit):
 		assert self.model
 
-		if not lit:
-			return None
-		elif isinstance(lit, list):
-			return [self.get_model(l) for l in lit]
-		else:
+		try:
+			return super().get_model(lit)
+		except NotImplementedError:
 			return self.solver.Value(self.getLit(lit))

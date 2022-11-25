@@ -147,12 +147,10 @@ class OrSolver(Solver):
 			return False
 		logging.error("Simplex methods terminated with unexpected status: {}".format(res))
 
-	def get_model(self, var):
+	def get_model(self, lit):
 		assert self.solver
 
-		if not var:
-			return None
-		elif isinstance(var, list):
-			return [self.get_model(v) for v in var]
-		else:
-			return int(self.getLit(var).solution_value())
+		try:
+			return super().get_model(lit)
+		except NotImplementedError:
+			return int(self.getLit(lit).solution_value())

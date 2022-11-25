@@ -14,6 +14,7 @@ import logging
 logging.captureWarnings(True)
 
 from models.model1 import DcnModel1
+from models.model2 import DcnModel2
 
 from solvers.card_enc_type import CardEncType, Relations, RelationOps
 from solvers.solver import SolverResult, SolverResultType
@@ -75,6 +76,9 @@ def Optimize(dcnModel, getModel=False):
 
 	to = int(startTime + timeout - time()) if timeout else None
 	pool = ProcessPool(len(solverConfigs), timeout=to)
+
+	result = runSolver(solverConfigs[0])
+	return result
 
 	try:
 		result = pool.uimap(runSolver, solverConfigs).next(timeout=to)
@@ -178,7 +182,7 @@ logging.info("Parsing the file {}".format(inputFile))
 with open(inputFile) as file:
 	jsonData = json.load(file)
 
-dcnModels = [DcnModel1]
+dcnModels = [DcnModel1,DcnModel2]
 dcnModel = dcnModels[jsonData["version"] - 1]()
 dcnModel.ReadInputFile(jsonData)
 
