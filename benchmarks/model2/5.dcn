@@ -200,7 +200,7 @@
         {
             "source": 8,
             "destination": 16,
-            "packet rate": 1
+            "packet rate": 175
         },
         {
             "source": 12,

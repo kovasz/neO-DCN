@@ -34,7 +34,8 @@ class Constraint():
 		
 		bound -- bound on the RHS of the constraint
 
-		boolLit -- Boolean literal that is set to be equivalent with the constraint (undefined by default)
+		boolLit -- Boolean literal that implies the constraint (undefined by default)
+		boolLit =>  lits*weights relation bound
 		"""
 
 		assert(lits is not None)
@@ -91,7 +92,7 @@ class Solver(object):
 
 		raise NotImplementedError("Please Implement this method")
 	
-	def minimize(self, lits, weights):
+	def minimize(self, lits, weights = None):
 		"""Add a linear expression as an objective function to minimize
 
 		Parameters:

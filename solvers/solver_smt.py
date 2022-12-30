@@ -118,6 +118,9 @@ class SmtSolver(solvers.solver.Solver):
 			"{:d}   <=>".format(constraint.boolLit) if constraint.boolLit else "",
 			expr))
 
+	def minimize(self, lits, weights = None):
+		logging.debug("SMT solver does not support minimizing")
+
 	def solve(self):
 		if self.dumpFile:
 			self.dumpFile.write("(check-sat)(exit)")

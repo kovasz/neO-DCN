@@ -1,6 +1,6 @@
 {
-    "version": 1,
-	"number of servers": 16,
+    "version": 2,
+    "number of servers": 16,
     "number of switches": 20,
     "links": [
         {

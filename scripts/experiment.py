@@ -125,6 +125,18 @@ def MemProf(path, solverOption, outFileName, outCsvFileName):
 
 ### MODEL 1
 
+Solve("../benchmarks/constraints2023/model2", "--or-solver gurobi", "out/model2.gurobi.out")
+ParseResult(["out/model2.gurobi.out"], "out/model2.gurobi.csv")
+
+Solve("../benchmarks/constraints2023/model2", "--cp-solver", "out/model2.cpsat.out")
+ParseResult(["out/model2.cpsat.out"], "out/model2.cpsat.csv")
+
+Solve("../benchmarks/constraints2023/model2", "--or-solver cbc", "out/model2.cbc.out")
+ParseResult(["out/model2.cbc.out"], "out/model2.cbc.csv")
+
+Solve("../benchmarks/constraints2023/model2", "--or-solver scip", "out/model2.scip.out")
+ParseResult(["out/model2.scip.out"], "out/model2.scip.csv")
+
 # Solve("../benchmarks/cscs2022/2/NCP", "--or-solver gurobi", "out/ncp.gurobi.out")
 # ParseResult(["out/ncp.gurobi.out"], "out/ncp.gurobi.csv")
 
@@ -149,7 +161,7 @@ def MemProf(path, solverOption, outFileName, outCsvFileName):
 # Solve("../benchmarks/cscs2022/2/Random", "--cp-solver", "out/rnd.cpsat.out")
 # ParseResult(["out/rnd.cpsat.out"], "out/rnd.cpsat.csv")
 
-Solve("../benchmarks/cscs2022/3", "--or-solver gurobi", "out/rnd.gurobi.out")
-ParseResult(["out/rnd.gurobi.out"], "out/rnd.gurobi.csv")
+# Solve("../benchmarks/cscs2022/3", "--or-solver gurobi", "out/rnd.gurobi.out")
+# ParseResult(["out/rnd.gurobi.out"], "out/rnd.gurobi.csv")
 
-# RunCMD("systemctl poweroff")
+RunCMD("systemctl poweroff")

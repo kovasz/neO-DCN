@@ -2,6 +2,7 @@
 
 from math import pow, sqrt, ceil
 import logging
+import itertools
 
 from solvers.card_enc_type import Relations
 from solvers.solver import Constraint
@@ -26,13 +27,14 @@ class Flow:
 	def __str__(self):
 		return "({:d},{:d}): packetRate = {:d}".format(self.source, self.destination, self.packetRate)
 
-class DcnModel2(DcnModel):
+class DcnModel3(DcnModel):
 	def __init__(self):
 		super().__init__()
 		self.numberOfServers = 0
 		self.numberOfSwitches = 0
 		self.links = None
 		self.flows = None
+		self.powerLevels = [0.3761, 0.4455, 1]
 
 	def ReadInputFile(self, json):
 		self.numberOfServers = json["number of servers"]
@@ -64,17 +66,30 @@ class DcnModel2(DcnModel):
 		linkVars = {}
 		flowVars = {}
 		for l in self.links:
-			linkVars[(l.source, l.destination)] = solver.generateVars(1)[0]
+			linkVars[(l.source, l.destination)] = solver.generateVars(3) # there are 3 power levels
 			flowVars[(l.source, l.destination)] = solver.generateVars(len(self.flows))
+
 		
 		# MIN = @SUM(EDGES: L);
-		solver.minimize(list(linkVars.values()) + [v for k,v in switchVars.items() if k > self.numberOfServers])
+		lv = linkVars.values()
+		solver.minimize(
+			lits = list(itertools.chain.from_iterable(lv)),
+			weights = [1 + self.powerLevels[0], 1 + self.powerLevels[1], 1 + self.powerLevels[2]] * len(lv)
+		)
+
+		# For each link, 0 or 1 level vars must be true
+		# for l in self.links:
+		# 	solver.addConstraint(Constraint(
+		# 				lits = linkVars[(l.source, l.destination)],
+		# 				relation = Relations.LessOrEqual,
+		# 				bound = 1
+		# 			))
 
 		# @FOR(FLOWS(f):@FOR(SWITCHES(i):@FOR(SWITCHES(j): 
 		# 	FR(f,i,j) <= L(i,j)
 		for l in self.links:
 			for fIndex in range(len(self.flows)):
-				solver.addClause([-flowVars[(l.source, l.destination)][fIndex], linkVars[(l.source, l.destination)]])
+				solver.addClause([-flowVars[(l.source, l.destination)][fIndex]] + linkVars[(l.source, l.destination)])
 		
 		# @FOR(FLOWS(f):
 		# 	@SUM(SWITCHES(i): FR(f,SOURCE(f),i))=1
@@ -118,7 +133,7 @@ class DcnModel2(DcnModel):
 		# 	U(i,j) <= 1000 - LOAD(i,j)
 		# ));
 		for l in self.links:
-			if l.source > l.destination: continue
+			# if l.source > l.destination: continue
 
 			lits = []
 			weights = []
@@ -133,6 +148,20 @@ class DcnModel2(DcnModel):
 						relation = Relations.LessOrEqual,
 						bound = 1000 - l.load
 					))
+			solver.addConstraint(Constraint(
+						lits = lits,
+						weights = weights,
+						relation = Relations.Less,
+						bound = 10,
+						boolLit = linkVars[(l.source, l.destination)][0]
+					))
+			solver.addConstraint(Constraint(
+						lits = lits,
+						weights = weights,
+						relation = Relations.Less,
+						bound = 100,
+						boolLit = linkVars[(l.source, l.destination)][1]
+					))
 
 		# @FOR(SWITCHES(i): @FOR(SWITCHES(j):
 		# 		LOAD(i,j) / 1000 <= L(i,j)
@@ -140,34 +169,39 @@ class DcnModel2(DcnModel):
 		### WHAT TO DO WITH THIS?
 
 # new constraint: "Graph connection constraint"
-		for l in self.links:
-			solver.addClause([switchVars[l.source], -linkVars[(l.source, l.destination)]])
-			solver.addClause([switchVars[l.destination], -linkVars[(l.source, l.destination)]])
+		# for l in self.links:
+		# 	solver.addClause([switchVars[l.source], -linkVars[(l.source, l.destination)]])
+		# 	solver.addClause([switchVars[l.destination], -linkVars[(l.source, l.destination)]])
 
-#		outputVars = [[switchVars],[]]
-		outputVars = {"switches": [], "links": []}
-		outputVars["switches"] = [ v for k,v in switchVars.items() if k > self.numberOfServers ]
+		outputVars = {"links": []}
+		# outputVars["switches"] = [ v for k,v in switchVars.items() if k > self.numberOfServers ]
 		for l in self.links:
-#			outputVars[1].append([ linkVars[(l.source, l.destination)], flowVars[(l.source, l.destination)] ])
 			outputVars["links"].append( (linkVars[(l.source, l.destination)] , flowVars[(l.source, l.destination)]) )
 		return outputVars
 
 	def GetObjectiveValue(self, model):
-#		return sum(model[1][i][0] for i in range(len(self.links))) + sum()
-		return sum(s[0] for s in model["links"]) + sum(model["switches"])
+		sum = 0
+		for s in model["links"]:
+			lv = s[0]
+			sum += (1 + self.powerLevels[0]) * lv[0] + (1 + self.powerLevels[1]) * lv[1] + (1 + self.powerLevels[2]) * lv[2]
+		return sum
 
 	def DisplayModel(self, model):
-		for sIndex, s in enumerate(model["switches"]):
-			# print("{} {:d}: \t{:d}".format("Server" if sIndex < self.numberOfServers else "Switch", sIndex + 1, s))
-			print("Switch {:d}: \t{:d}".format(self.numberOfServers + 1 + sIndex, s))
+		# for sIndex, s in enumerate(model["switches"]):
+		# 	print("Switch {:d}: \t{:d}".format(self.numberOfServers + 1 + sIndex, s))
 
 		for lIndex, l in enumerate(self.links):
-			print("Link ({:d},{:d}):\t{:d}".format(l.source, l.destination, model["links"][lIndex][0]))
+			# print("Link ({:d},{:d}):\t@level {}".format(l.source, l.destination, model["links"][lIndex][0]))
+			print("Link ({:d},{:d}):\t".format(l.source, l.destination), end = "")
+			try:
+				print("@level {:d}".format(model["links"][lIndex][0].index(1) + 1))
+			except:
+				print("OFF")
 
 		for fIndex, f in enumerate(self.flows):
-			print("Flow ({:d},{:d}):".format(f.source, f.destination), end = " ")
+			print("Flow ({:d},{:d}) with packet rate {:d}:".format(f.source, f.destination, f.packetRate), end = " ")
 			for lIndex, l in enumerate(self.links):
 				l_val, flows = model["links"][lIndex]
-				if l_val == 1 and flows[fIndex] == 1:
+				if 1 in l_val and flows[fIndex] == 1:
 					print("({:d},{:d})".format(l.source, l.destination), end = " ")
 			print()

@@ -10,84 +10,84 @@ from solvers.solver import Solver, Constraint
 import uuid
 
 class GurobiSolvers(Enum):
-    GurobiSolver = 'gurobi'
+	GurobiSolver = 'gurobi'
 
 
 class GurobiSolver(Solver):
-    def __init__(self):
-        super().__init__()
-        self.model = Model()
-        self.model.setParam('OutputFlag', 0)
-        self.vars = []
-        self.cntConstraints = 0
+	def __init__(self):
+		super().__init__()
+		self.model = Model()
+		self.model.setParam('OutputFlag', 0)
+		self.vars = []
+		self.cntConstraints = 0
 
-    def generateVars(self, numVars):
-        cntVars = len(self.vars)
-        newVars = [i for i in range(cntVars + 1, cntVars + numVars + 1)]
+	def generateVars(self, numVars):
+		cntVars = len(self.vars)
+		newVars = [i for i in range(cntVars + 1, cntVars + numVars + 1)]
 
-        self.vars += [self.model.addVar(vtype = GRB.BINARY, name = "v{:d}".format(v)) for v in newVars]
+		self.vars += [self.model.addVar(vtype = GRB.BINARY, name = "v{:d}".format(v)) for v in newVars]
 
-#         self.model.update()
+	#         self.model.update()
 
-        return newVars
+		return newVars
 
-    def getVar(self, lit):
-        return self.vars[abs(lit) - 1]
+	def getVar(self, lit):
+		return self.vars[abs(lit) - 1]
 
-    def getLit(self, lit):
-        if lit > 0:
-            return self.getVar(lit)
-        else:
-            return - self.getVar(lit)
-#            return 1 - self.getVar(lit)
+	def getLit(self, lit):
+		if lit > 0:
+			return self.getVar(lit)
+		else:
+			return - self.getVar(lit)
+	#            return 1 - self.getVar(lit)
 
-    def addClause(self, lits):
-        offset = 0
-        for i in range(len(lits)):
-            if lits[i] < 0:
-                offset += 1
+	def addClause(self, lits):
+		offset = 0
+		for i in range(len(lits)):
+			if lits[i] < 0:
+				offset += 1
 
-        self.model.addConstr(sum(self.getLit(l) for l in lits) >= 1 - offset)
+		self.model.addConstr(sum(self.getLit(l) for l in lits) >= 1 - offset)
 
-        self.cntConstraints += 1
+		self.cntConstraints += 1
 
-        logging.debug("Constraint #{:d}:   clause {}".format(self.cntConstraints, lits))
+		logging.debug("Constraint #{:d}:   clause {}".format(self.cntConstraints, lits))
 
-    def __addConstraint(self, constraint):
-#        logging.info(str(constraint))
+	def __addConstraint(self, constraint):
+	#        logging.info(str(constraint))
 
-        if constraint.weights is not None:
-            weights = constraint.weights
-        else:
-            weights = [1 for _ in constraint.lits]
+		if constraint.weights is not None:
+			weights = constraint.weights
+		else:
+			weights = [1 for _ in constraint.lits]
 
-        if constraint.relation == Relations.LessOrEqual:
-            return self.__atmost(constraint.lits, weights, constraint.bound, constraint.boolLit)
-        elif constraint.relation == Relations.Less:
-            return self.__atmost(constraint.lits, weights, constraint.bound - 1, constraint.boolLit)
-        elif constraint.relation == Relations.GreaterOrEqual:
-            return self.__atmost([-l for l in constraint.lits], weights, sum(weights) - constraint.bound,
-                                 constraint.boolLit)
-        elif constraint.relation == Relations.Greater:
-            return self.__atmost([-l for l in constraint.lits], weights, sum(weights) - constraint.bound - 1,
-                                 constraint.boolLit)
-        else:
-            raise Exception("Undefined value for a relation: {}".format(constraint.relation))
+		if constraint.relation == Relations.LessOrEqual:
+			return self.__atmost(constraint.lits, weights, constraint.bound, constraint.boolLit)
+		elif constraint.relation == Relations.Less:
+			return self.__atmost(constraint.lits, weights, constraint.bound - 1, constraint.boolLit)
+		elif constraint.relation == Relations.GreaterOrEqual:
+			return self.__atmost([-l for l in constraint.lits], weights, sum(weights) - constraint.bound,
+									constraint.boolLit)
+		elif constraint.relation == Relations.Greater:
+			return self.__atmost([-l for l in constraint.lits], weights, sum(weights) - constraint.bound - 1,
+									constraint.boolLit)
+		else:
+			raise Exception("Undefined value for a relation: {}".format(constraint.relation))
 
-    def addConstraint(self, constraint):
-        self.__addConstraint(constraint)
+	def addConstraint(self, constraint):
+		self.__addConstraint(constraint)
 
-        if constraint.boolLit is not None:
-            self.__addConstraint(Constraint(
-                lits=constraint.lits,
-                weights=constraint.weights,
-                relation=Relations(-constraint.relation.value),
-                bound=constraint.bound,
-                boolLit=-constraint.boolLit
-            ))
+		# if constraint.boolLit is not None:
+		#     self.__addConstraint(Constraint(
+		#         lits=constraint.lits,
+		#         weights=constraint.weights,
+		#         relation=Relations(-constraint.relation.value),
+		#         bound=constraint.bound,
+		#         boolLit=-constraint.boolLit
+		#     ))
 
-    def __atmost(self, lits, weights, bound, boolLit=0):
-        """Add an "AtMost", i.e., less-or-equal cardinality constraint to the solver
+	def __atmost(self, lits, weights, bound, boolLit=0):
+		"""Add an "AtMost", i.e., less-or-equal cardinality constraint to the solver
 
 		Parameters:
 
@@ -95,63 +95,82 @@ class GurobiSolver(Solver):
 
 		bound -- upper bound on the RHS of the constraint
 
-		boolLit -- Boolean literal that is set to be equivalent with the constraint (undefined by default)
+		boolLit -- Boolean literal that implies the constraint (undefined by default)
 		boolLit =>  lits*weights <= bound
 		"""
 
-        if weights is None:
-            weights = [1 for _ in lits]
+		if weights is None:
+			weights = [1 for _ in lits]
 
-        offset = 0
-        for i in range(len(lits)):
-            if lits[i] < 0:
-                offset += weights[i]
+		offset = 0
+		for i in range(len(lits)):
+			if lits[i] < 0:
+				offset += weights[i]
 
-        lhs = sum(weights[i] * self.getLit(lits[i]) for i in range(len(lits)))
-        bound -= offset
+		lhs = sum(weights[i] * self.getLit(lits[i]) for i in range(len(lits)))
+		bound -= offset
 
-        if boolLit:
-            self.model.addGenConstrIndicator(self.getVar(boolLit), boolLit > 0, lhs, GRB.LESS_EQUAL, bound)
-        else:
-            self.model.addConstr(lhs <= bound)
+		if boolLit:
+			self.model.addGenConstrIndicator(self.getVar(boolLit), boolLit > 0, lhs, GRB.LESS_EQUAL, bound)
+		else:
+			self.model.addConstr(lhs <= bound)
 
-        self.cntConstraints += 1
+		self.cntConstraints += 1
 
-        logging.debug("Constraint #{:d}: {}   {} <= {}".format(self.cntConstraints,
-            "{} =>".format(boolLit) if boolLit else "",
-            "+".join(["{}*{}".format(weights[i], lits[i]) for i in range(len(lits))]),
-            bound))
-#        logging.debug(str(constraint))
+		logging.debug("Constraint #{:d}: {}   {} <= {}".format(self.cntConstraints,
+			"{} =>".format(boolLit) if boolLit else "",
+			"+".join(["{}*{}".format(weights[i], lits[i]) for i in range(len(lits))]),
+			bound))
+	#        logging.debug(str(constraint))
 
-    def solve(self):
-        """Start the solving process
+	def minimize(self, lits, weights = None):
+		assert(lits is not None)
+		assert(weights is None or len(weights) == len(lits))
 
-        Returns: True iff satisfiable
-        """
+		if weights is None:
+			weights = [1 for l in lits]
 
-        self.model.optimize()
-        logging.debug(f'Solver status is {self.model.status}')
-        if self.model.status == GRB.OPTIMAL:
-            return True
-        return False
+		self.model.setObjective(sum(weights[i] * self.getLit(lits[i]) for i in range(len(lits))), GRB.MINIMIZE)
 
-    def get_model(self, var):
-        """Get the satisfying model for certain vars
+	def solve(self):
+		"""Start the solving process
 
-        Parameters:
+		Returns: True iff satisfiable
+		"""
 
-        vars -- a list of vars
+		self.model.optimize()
+		logging.debug(f'Solver status is {self.model.status}')
+		if self.model.status == GRB.OPTIMAL:
+			return True
+		return False
 
-        Returns: a list of assignments to vars
-        """
+	# def get_model(self, var):
+	# 	"""Get the satisfying model for certain vars
 
-        assert(self.model)
+	# 	Parameters:
 
-        if not var:
-            return None
-        elif isinstance(var, list):
-            return [self.get_model(v) for v in var]
-        else:
-            return self.model.getVarByName(self.getVar(var).varName).x
-            return self.getVar(var).x
-#            return self.model.getVarByName(self.getVar(var).varName).x == 1
+	# 	vars -- a list of vars
+
+	# 	Returns: a list of assignments to vars
+	# 	"""
+
+	# 	assert(self.model)
+
+	# 	if not var:
+	# 		return None
+	# 	elif isinstance(var, list):
+	# 		return [self.get_model(v) for v in var]
+	# 	else:
+	# 		return self.model.getVarByName(self.getVar(var).varName).x
+	# 		return self.getVar(var).x
+	# #            return self.model.getVarByName(self.getVar(var).varName).x == 1
+
+	def get_model(self, lit):
+		assert self.model
+
+		try:
+			return super().get_model(lit)
+		except NotImplementedError:
+			val = self.model.getVarByName(self.getVar(lit).varName).x
+			return val if lit > 0 else 1 - var
+			# return self.getVar(var).x

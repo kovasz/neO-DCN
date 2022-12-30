@@ -8,14 +8,24 @@ import json
 startingRow = 0
 startingColumn = "B"
 
-class Model(object):
-	@staticmethod
-	def generateBenchmark(inputFile, outputDir, numberOfFlows):
+class DcnModel(object):
+	def __init__(self, inputFile, outDir):
+		self.inputFile = inputFile
+		self.outDir = outDir
+
+	def generateBenchmark(self):
+		content = self.generateHeader()
+		content["links"] = self.generateLinks()
+		content["flows"] = self.generateFlows()
+
+		with open("{}/{}.dcn".format(self.outDir, PurePosixPath(self.inputFile).stem), "w") as outFile:
+			outFile.write(json.dumps(content, indent = 4))
+			outFile.close()
+	
+	def generateHeader(self):
 		raise NotImplementedError()
 
-class Model1(Model):
-	@staticmethod
-	def __generateLinks():
+	def generateLinks(self):
 		return [
 		{
 			"source": 1,
@@ -211,9 +221,8 @@ class Model1(Model):
 		}
 			]
 
-	@staticmethod
-	def __generateFlows(inputFile):
-		sheet = load_workbook(inputFile).active
+	def generateFlows(self):
+		sheet = load_workbook(self.inputFile).active
 
 		flows = []
 		
@@ -222,39 +231,52 @@ class Model1(Model):
 		i = startingRow
 		while i < sheet.max_row and sheet[startingColumn][i].value:
 			print(i + 1, end = " ")
-			flows.append({
-				"source": sheet[startingColumn][i].value,
-				"destination": sheet[chr(ord(startingColumn) + 1)][i].value,
-				"packet rate": int(sheet[chr(ord(startingColumn) + 2)][i].value)
-			})
+			flows.append(self.generateFlow(sheet, startingColumn, i))
 			i += 1
 		print()
 		
 		return flows
 
-	@staticmethod
-	def generateBenchmark(inputFile, outputDir):
-		content = {
+	def generateFlow(self, sheet, col, row):
+		return {
+				"source": sheet[col][row].value,
+				"destination": sheet[chr(ord(col) + 1)][row].value,
+				"packet rate": round(sheet[chr(ord(col) + 2)][row].value)
+			}
+
+class DcnModel1(DcnModel):
+	def __init__(self, inputFile, outDir):
+		super().__init__(inputFile, outDir)
+
+	def generateHeader(self):
+		return {
 			"version": 1,
-			"number of switches": 36,
-			"links": Model1.__generateLinks(),
-			"flows": Model1.__generateFlows(inputFile),
+			"number of switches": 36
 		}
 
-		with open("{}/{}.dcn".format(outDir, PurePosixPath(inputFile).stem), "w") as outFile:
-			outFile.write(json.dumps(content, indent = 4))
-			outFile.close()
+class DcnModel2(DcnModel):
+	def __init__(self, inputFile, outDir):
+		super().__init__(inputFile, outDir)
 
+	def generateHeader(self):
+		return {
+			"version": 2,
+			"number of servers": 16,
+			"number of switches": 20
+		}
 
 
 parser = argparse.ArgumentParser("Convert an Excel file (used as input for LINGO) to a JSON file (as input for neO)")
 
 parser.add_argument("path", help="path to XLSX file(s)")
+parser.add_argument("--model",
+					action="store", type=int, dest="model", default=1,
+					help="version numbder of the DCN model")
 
-# parser.add_argument("-m1", "--model 1",
-#                     action="store_true", dest="model_1",
-#                     help="generate model 1 network")
 args = parser.parse_args()
+
+model = args.model - 1
+dcnModels = [DcnModel1,DcnModel2]
 
 # Checking and collecting the input files
 if not os.path.exists(args.path):
@@ -274,6 +296,7 @@ if not os.path.exists(outDir):
 
 for file in inputFiles:
 	print("Converting {}".format(file))
-	Model1.generateBenchmark(file, outDir)
+	dcnModel = dcnModels[model](file, outDir)
+	dcnModel.generateBenchmark()
 
 print("Files converted!")

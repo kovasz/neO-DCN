@@ -15,6 +15,7 @@ logging.captureWarnings(True)
 
 from models.model1 import DcnModel1
 from models.model2 import DcnModel2
+from models.model3 import DcnModel3
 
 from solvers.card_enc_type import CardEncType, Relations, RelationOps
 from solvers.solver import SolverResult, SolverResultType
@@ -32,7 +33,7 @@ def runSolver(args):
 	if solverType in SatSolvers:
 		solver = SatSolver(satSolverType=solverType, cardinalityEnc=cardinalityEnc, dumpFileName=dump_file)
 	elif solverType in SmtSolvers:
-		solver = SmtSolver(smtSolverType=solverType, dumpFileName=dump_file)
+		solver = SmtSolver(smtSolverType=solverType)
 	elif solverType in OrSolvers:
 		solver = OrSolver(orSolverType=solverType)
 	elif solverType in CpSolvers:
@@ -40,7 +41,7 @@ def runSolver(args):
 	elif solverType in GurobiSolvers:
 		solver = GurobiSolver()
 
-	logging.info("{} starts encoding WSN...".format(solverType))
+	logging.info("{} starts encoding...".format(solverType))
 	outputVars = dcnModel.EncodeDcnConstraints(solver=solver)
 
 	logging.info("{} starts solving...".format(solverType))
@@ -77,8 +78,7 @@ def Optimize(dcnModel, getModel=False):
 	to = int(startTime + timeout - time()) if timeout else None
 	pool = ProcessPool(len(solverConfigs), timeout=to)
 
-	result = runSolver(solverConfigs[0])
-	return result
+	# result = runSolver(solverConfigs[0])
 
 	try:
 		result = pool.uimap(runSolver, solverConfigs).next(timeout=to)
@@ -120,9 +120,9 @@ parser.add_argument("--or-solver",
 parser.add_argument("--cp-solver",
 					action="store_true", dest="cp_solver",
 					help="run CP-SAT")
-# parser.add_argument("--gurobi-solver",
-# 					action="store_true", dest="gurobi_solver",
-# 					help="run Gurobi")
+parser.add_argument("--gurobi-solver",
+					action="store_true", dest="gurobi_solver",
+					help="run Gurobi")
 parser.add_argument("--get-scheduling",
                     action="store_true", dest="bool_get_scheduling", default=False,
                     help="get the scheduling")
@@ -165,7 +165,7 @@ for args_solver in args.or_solver:
 cpSolverType = [CpSolvers.CPSat] if args.cp_solver else []
 
 gurobiSolverType = []
-# gurobiSolverType = [GurobiSolvers.GurobiSolver] if args.gurobi_solver else []
+gurobiSolverType = [GurobiSolvers.GurobiSolver] if args.gurobi_solver else []
 
 # dump_file = args.dump_file
 
@@ -182,7 +182,7 @@ logging.info("Parsing the file {}".format(inputFile))
 with open(inputFile) as file:
 	jsonData = json.load(file)
 
-dcnModels = [DcnModel1,DcnModel2]
+dcnModels = [DcnModel1,DcnModel2,DcnModel3]
 dcnModel = dcnModels[jsonData["version"] - 1]()
 dcnModel.ReadInputFile(jsonData)
 
@@ -195,7 +195,7 @@ if result.result == SolverResultType.TIMEOUT:
 elif result.result == SolverResultType.SAT:
 	logging.info("Result provided by: {}".format(result.solverType))
 	print("SAT")
-	print("OPTIMUM: {:d}".format(dcnModel.GetObjectiveValue(result.model)))
+	print("OPTIMUM: {}".format(dcnModel.GetObjectiveValue(result.model)))
 	logging.info("elapsed time = {:f}".format(time() - startTime))
 	if bool_get_scheduling:
 		dcnModel.DisplayModel(result.model)
