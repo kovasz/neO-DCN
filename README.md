@@ -18,7 +18,7 @@ students: https://www.gurobi.com/academia/academic-program-and-licenses/
 neO requires Python 3.
 
 ```
-pip install parse pathos ortools
+pip install parse pathos ortools gurobipy
 ```
 
 If you want neO-DCN to execute Gurobi as an ILP solver, follow installation instructions at https://www.gurobi.com/documentation/9.1/quickstart_linux/software_installation_guid.html#section:Installation
@@ -33,11 +33,15 @@ python neO.py --help
 Command-line arguments regarding solvers:
 - `--or-solver`: to run OR-Tools ILP solver such as SCIP, CBC, Gurobi.
 - `--cp-solver`: to run CP-SAT, providing native support for indicator constraints.
-<!-- - `--gurobi-solver`: to run Gurobi via the package gurobipy, providing native support for indicator constraints. -->
+- `--gurobi-solver`: to run Gurobi via the package gurobipy, providing native support for indicator constraints.
 
 Command-line arguments regarding the results:
 - `--get-scheduling`: to retrieve an optimal scheduling of the sensor nodes.
 <!-- - `--verify-scheduling`: to verify if the resulting scheduling satisfies the WSN constraints. -->
 - `--timeout`: to set the timeout in seconds.
+
+## Benchmarks
+
+Benchmarks are provided in the folder <code>benchmarks</code>.
 
 Gergely Kovasznai, Eszterházy Károly Catholic University, Eger, Hungary, 2022.
