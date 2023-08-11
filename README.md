@@ -42,6 +42,9 @@ Command-line arguments regarding the results:
 
 ## Benchmarks
 
-Benchmarks are provided in the folder <code>benchmarks</code>.
+Benchmarks are provided in the folder <code>benchmarks</code>, in JSON format. The <code>version</code> attribute corresponds to the DCN model to be used:
+* <code>version: 1</code>: DCN model with traffic consolidation to minimize the number of active links
+* <code>version: 2</code>: DCN model with traffic consolidation to minimize the number of active links and of active servers
+* <code>version: 3</code>: DCN model with adaptive link speed to minimize the power consumption of links
 
 Gergely Kovasznai, Eszterházy Károly Catholic University, Eger, Hungary, 2022.
